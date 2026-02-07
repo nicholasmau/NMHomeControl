@@ -1,0 +1,48 @@
+# Node modules
+node_modules
+npm-debug.log
+
+# Build outputs
+dist
+build
+.next
+
+# Environment files (will be passed via docker-compose)
+.env
+.env.local
+.env.*.local
+
+# Git
+.git
+.gitignore
+
+# IDE
+.vscode
+.idea
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+logs
+*.log
+
+# Database files (will be mounted as volumes)
+data/*.sqlite
+data/*.db
+
+# Certificates (will be mounted as volumes)
+certs
+
+# Documentation
+docs
+*.md
+
+# Testing
+coverage
+.nyc_output
+
+# Temporary files
+tmp
+temp

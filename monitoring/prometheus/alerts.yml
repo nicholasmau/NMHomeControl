@@ -1,0 +1,140 @@
+groups:
+  - name: home_control_alerts
+    interval: 30s
+    rules:
+      # Service Health Alerts
+      - alert: ServiceDown
+        expr: up{job="home-control-backend"} == 0
+        for: 1m
+        labels:
+          severity: critical
+          component: backend
+        annotations:
+          summary: "Home Control Backend is down"
+          description: "The backend service has been down for more than 1 minute."
+
+      # Performance Alerts
+      - alert: HighRequestLatency
+        expr: histogram_quantile(0.95, rate(http_request_duration_seconds_bucket[5m])) > 2
+        for: 5m
+        labels:
+          severity: warning
+          component: performance
+        annotations:
+          summary: "High HTTP request latency detected"
+          description: "95th percentile request latency is {{ $value }}s (threshold: 2s)"
+
+      - alert: HighDeviceCommandLatency
+        expr: histogram_quantile(0.95, rate(device_command_duration_seconds_bucket[5m])) > 3
+        for: 5m
+        labels:
+          severity: warning
+          component: devices
+        annotations:
+          summary: "High device command latency"
+          description: "95th percentile device command latency is {{ $value }}s (threshold: 3s)"
+
+      - alert: HighSmartThingsAPILatency
+        expr: histogram_quantile(0.95, rate(smartthings_api_duration_seconds_bucket[5m])) > 5
+        for: 5m
+        labels:
+          severity: warning
+          component: smartthings
+        annotations:
+          summary: "High SmartThings API latency"
+          description: "95th percentile SmartThings API latency is {{ $value }}s (threshold: 5s)"
+
+      # Error Rate Alerts
+      - alert: HighErrorRate
+        expr: rate(errors_total[5m]) > 0.1
+        for: 5m
+        labels:
+          severity: warning
+          component: errors
+        annotations:
+          summary: "High error rate detected"
+          description: "Error rate is {{ $value }} errors/second (threshold: 0.1/s)"
+
+      - alert: HighHTTPErrorRate
+        expr: sum(rate(http_requests_total{status_code=~"5.."}[5m])) / sum(rate(http_requests_total[5m])) > 0.05
+        for: 5m
+        labels:
+          severity: warning
+          component: api
+        annotations:
+          summary: "High HTTP 5xx error rate"
+          description: "{{ $value | humanizePercentage }} of requests are returning 5xx errors (threshold: 5%)"
+
+      - alert: AuthenticationFailureSpike
+        expr: rate(auth_attempts_total{success="false"}[5m]) > 0.5
+        for: 2m
+        labels:
+          severity: warning
+          component: security
+        annotations:
+          summary: "High authentication failure rate"
+          description: "{{ $value }} failed auth attempts per second (threshold: 0.5/s)"
+
+      # Device Command Alerts
+      - alert: HighDeviceCommandFailureRate
+        expr: sum(rate(device_commands_total{success="false"}[5m])) / sum(rate(device_commands_total[5m])) > 0.1
+        for: 5m
+        labels:
+          severity: warning
+          component: devices
+        annotations:
+          summary: "High device command failure rate"
+          description: "{{ $value | humanizePercentage }} of device commands are failing (threshold: 10%)"
+
+      # Session Alerts
+      - alert: NoActiveSessions
+        expr: sum(active_sessions) == 0
+        for: 30m
+        labels:
+          severity: info
+          component: sessions
+        annotations:
+          summary: "No active user sessions"
+          description: "There have been no active sessions for 30 minutes."
+
+      - alert: UnusuallyHighSessionCount
+        expr: sum(active_sessions) > 10
+        for: 5m
+        labels:
+          severity: info
+          component: sessions
+        annotations:
+          summary: "Unusually high number of active sessions"
+          description: "There are {{ $value }} active sessions (threshold: 10)"
+
+      # SmartThings API Alerts
+      - alert: SmartThingsAPIFailureRate
+        expr: sum(rate(smartthings_api_calls_total{success="false"}[5m])) / sum(rate(smartthings_api_calls_total[5m])) > 0.2
+        for: 5m
+        labels:
+          severity: warning
+          component: smartthings
+        annotations:
+          summary: "High SmartThings API failure rate"
+          description: "{{ $value | humanizePercentage }} of SmartThings API calls are failing (threshold: 20%)"
+
+      # Request Rate Alerts
+      - alert: LowRequestRate
+        expr: rate(http_requests_total[5m]) < 0.01
+        for: 15m
+        labels:
+          severity: info
+          component: api
+        annotations:
+          summary: "Unusually low request rate"
+          description: "Request rate is {{ $value }} requests/second (threshold: 0.01/s)"
+
+      - alert: HighRequestRate
+        expr: rate(http_requests_total[5m]) > 100
+        for: 5m
+        labels:
+          severity: warning
+          component: api
+        annotations:
+          summary: "Unusually high request rate"
+          description: "Request rate is {{ $value }} requests/second (threshold: 100/s)"

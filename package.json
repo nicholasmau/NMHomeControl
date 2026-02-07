@@ -1,0 +1,39 @@
+{
+  "name": "home-control",
+  "version": "1.0.0",
+  "description": "Local home automation control interface for SmartThings and Google Home",
+  "private": true,
+  "workspaces": [
+    "frontend",
+    "backend"
+  ],
+  "scripts": {
+    "install:all": "npm install && npm install --workspace=frontend && npm install --workspace=backend",
+    "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "dev:backend": "npm run dev --workspace=backend",
+    "dev:frontend": "npm run dev --workspace=frontend",
+    "build": "npm run test && npm run build --workspace=frontend && npm run build --workspace=backend",
+    "start": "npm run start --workspace=backend",
+    "test": "npm run test --workspace=backend && npm run test --workspace=frontend",
+    "test:backend": "npm run test --workspace=backend",
+    "test:frontend": "npm run test --workspace=frontend",
+    "test:watch": "concurrently \"npm run test:watch --workspace=backend\" \"npm run test:watch --workspace=frontend\"",
+    "test:coverage": "npm run test --workspace=backend && npm run test --workspace=frontend",
+    "generate-certs": "node scripts/generate-certs.js",
+    "generate-certs-ps": "powershell -ExecutionPolicy Bypass -File scripts/generate-certs.ps1",
+    "setup": "node scripts/setup.js",
+    "lint": "npm run lint --workspace=frontend && npm run lint --workspace=backend",
+    "type-check": "npm run type-check --workspace=frontend && npm run type-check --workspace=backend"
+  },
+  "keywords": [
+    "home-automation",
+    "smartthings",
+    "google-home",
+    "iot"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}

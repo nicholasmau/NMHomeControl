@@ -1,0 +1,48 @@
+# Production Backend Dockerfile
+FROM node:20-alpine AS builder
+
+# Install build dependencies
+RUN apk add --no-cache python3 make g++
+
+WORKDIR /app
+
+# Copy package files
+COPY package*.json ./
+
+# Install all dependencies (including dev)
+RUN npm ci
+
+# Copy source
+COPY . .
+
+# Build TypeScript
+RUN npm run build
+
+# Production image
+FROM node:20-alpine
+
+# Install build dependencies for better-sqlite3
+RUN apk add --no-cache python3 make g++
+
+WORKDIR /app
+
+# Copy package files
+COPY package*.json ./
+
+# Install production dependencies only
+RUN npm ci --only=production
+
+# Copy built code from builder
+COPY --from=builder /app/dist ./dist
+
+# Copy frontend build (if exists) - destination must end with /
+COPY --from=builder /app/../frontend/dist/ ./frontend/dist/ 2>/dev/null || true
+
+# Expose port
+EXPOSE 3001
+
+# Run as non-root user
+USER node
+
+# Start production server
+CMD ["npm", "start"]
