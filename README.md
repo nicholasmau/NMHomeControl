@@ -2,6 +2,8 @@
 
 A secure, local-first web application for controlling SmartThings, Google Home, and other connected devices from your home network.
 
+This project was created with Claude Sonnet 4.5 as a weekend fun project.  Please see the docs folder for details on specific areas of interest.
+
 ## Screenshots
 
 ### Login & Demo Mode
