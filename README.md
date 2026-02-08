@@ -5,15 +5,15 @@ A secure, local-first web application for controlling SmartThings, Google Home, 
 ## Screenshots
 
 ### Login & Demo Mode
-![Login Page](docs/screenshots/login.png)
+![Login Page](docs/screenshots/HomeControl login.png)
 *Secure login with optional demo mode for testing without real devices*
 
 ### Dashboard & Scenes
-![Dashboard](docs/screenshots/dashboard.png)
+![Dashboard](docs/screenshots/HomeControl Scenes.png)
 *Control devices, execute scenes, and monitor your smart home in real-time*
 
 ### Admin Panel & Audit Logs
-![Admin Panel](docs/screenshots/admin.png)
+![Admin Panel](docs/screenshots/HomeControl admin panel.png)
 *Comprehensive audit logging and user management for administrators*
 
 ## Features
